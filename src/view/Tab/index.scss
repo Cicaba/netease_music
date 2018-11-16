@@ -1,0 +1,46 @@
+.App {
+  .am-drawer-sidebar{
+    width: 80%;
+    background-color: #fff;
+    .sidebar{
+      height: 100%;
+      .bag{
+        padding-top: 3rem;
+        height: 25%;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        .img{
+          width: 4rem;
+          border-radius:50%;
+          padding-left: 1rem;
+          img{
+            width: 4rem;
+            border-radius:50%;
+          }
+          p{
+            padding-top: .4rem;
+            color: #FFF;
+            font-size: 1.2rem;
+            font-weight: 900;
+          }
+        }
+
+      }
+    }
+  }
+  .TabBar{
+    background-color: #C20C0C;
+    color: rgba(255,255,255,.7);
+    height: 3rem;
+    font-size: 1.3rem;
+    .am-flexbox{
+      height: 100%;
+      >div{
+        text-align: center;
+      }
+    }
+  }
+}
+
+
