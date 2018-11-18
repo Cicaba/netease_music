@@ -3,5 +3,11 @@ export default {
   loginState:false,
   screenWidth:"",
   screenHeight:"",
-  userData:{}
+  userData:{
+    beforePlay:{},
+    account:{},
+    bindings:{},
+    profile:{},
+    detail:{}
+  }
 }

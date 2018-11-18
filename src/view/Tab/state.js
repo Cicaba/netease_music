@@ -7,8 +7,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    beforePlay:(Obj) => dispatch(Obj),
+    loginState: (Obj) => dispatch(Obj),
     screenWidth: (Obj) => dispatch(Obj),
-    screenHeight: (Obj) => dispatch(Obj)
+    screenHeight: (Obj) => dispatch(Obj),
+    userDataDetail: (Obj) => dispatch(Obj)
   };
 };
 

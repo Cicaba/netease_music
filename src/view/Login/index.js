@@ -5,7 +5,7 @@
 */
 import React,{Component} from 'react'
 import { Flex,Picker,List,InputItem,Button,Toast } from 'antd-mobile';
-import axios from 'axios'
+import axios from '../../plugin/axios'
 import Loading from '../../plugin/Loading'
 import './index.scss'
 export default class Index extends Component {
@@ -43,8 +43,12 @@ export default class Index extends Component {
         loading:false
       },()=>{
         this.props.loginState({"type":"loginState",data:true});
-        this.props.userData({type:"userData",data:res.data})
-        this.props.history.replace('/Song');
+        this.props.userData({type:"userData",data:{
+            account:res.data.account,
+            bindings:res.data.bindings,
+            profile:res.data.profile,
+          }})
+        this.props.history.replace('/');
       })
     }).catch(()=>{
       this.setState({

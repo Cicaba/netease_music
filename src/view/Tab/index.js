@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Flex,Drawer } from 'antd-mobile';
-import {Route} from 'react-router-dom';
+import Song from '../Song/index';
+import Player from '../player/index';
+import axios from '../../plugin/axios'
 import './index.scss'
 
-class App extends Component {
+class Tab extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open:false,
       TouchStart:[0,0],
       TouchEnd:[0,0],
-      present:1
+      present:1,
     };
   }
 
@@ -20,6 +22,15 @@ class App extends Component {
     this.props.screenWidth({"type":"screenWidth","data":document.body.clientWidth});
     if(!this.props.state.loginState){
       this.props.history.replace('/Login');
+    }else{
+      axios.get('/user/detail',{params:{"uid":this.props.state.userData.profile.userId}}).then(res=>{
+        this.props.userDataDetail({"type":"userDataDetail",data:res.data})
+      })
+      //登陆状态
+      axios.get('/login/status').catch(()=>{
+        this.props.loginState({type:"loginState",data:false});
+        this.props.history.replace('/Login');
+      })
     }
   }
   Drawer(){
@@ -48,16 +59,29 @@ class App extends Component {
     });
   }
   sidebar(){
-    return(
-      <div className={"sidebar"} onTouchStart={(e)=>{this.TouchStart(e)}} onTouchEnd={(e)=>{this.TouchEnd(e)}}>
-        <div className={"bag"} style={{backgroundImage:`url(${this.props.state.userData.profile.backgroundUrl})`}}>
-          <div className={"img"}>
-            <img src={this.props.state.userData.profile.avatarUrl}></img>
-            <p>{this.props.state.userData.profile.nickname}</p>
+      if('level' in this.props.state.userData.detail){
+        return(
+          <div className={"sidebar"} onTouchStart={(e)=>{this.TouchStart(e)}} onTouchEnd={(e)=>{this.TouchEnd(e)}}>
+            <div className={"bag"} style={{backgroundImage:`url(${this.props.state.userData.profile.backgroundUrl})`}}>
+              <div className={"img"}>
+                <img src={this.props.state.userData.profile.avatarUrl}></img>
+              </div>
+              <p>
+                {this.props.state.userData.profile.nickname}
+                &emsp;
+                <span className="level">{this.props.state.userData.detail.level}</span>
+                <span className="sign">签到</span>
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-    )
+        )
+      }else{
+        return(<div></div>)
+      }
+  }
+  play(item,arr){
+    this.props.beforePlay({type:"beforePlay",data:{...item,allItem:arr}})
+    this.refs.player.player()
   }
   render() {
     return (
@@ -77,7 +101,8 @@ class App extends Component {
             </Flex>
           </nav>
         </Drawer>
-        <Route path={this.props.match.path} component={()=>this.props.children}></Route>
+        <Song id={this.props.state.userData.profile.userId} play={(item,arr)=>{this.play(item,arr)}}></Song>
+        <Player ref={"player"}></Player>
       </main>
     );
   }
@@ -111,4 +136,4 @@ function getDirection(startx, starty, endx, endy) {
 
   return result;
 }
-export default App;
+export default Tab;

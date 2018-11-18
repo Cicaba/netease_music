@@ -1,0 +1,37 @@
+.player{
+  z-index: 9996;
+  background-color: #F0F2F3;
+  border-top: solid .1rem rgba(0,0,0,.1);
+  width: 100%;
+  position: fixed;
+  display: flex;
+  height: 4rem;
+  bottom: 0;
+  >div{
+    width: 4rem;
+    >img{
+      width: 4rem;
+    }
+  }
+  >.control{
+    padding-right: .3rem;
+    display: flex;
+    height: 100%;
+    width: calc(100% - 4rem);
+    >.content{
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+      padding-top: .8rem;
+      padding-left: .5rem;
+    }
+    >.handle{
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      >span{
+        margin-right: .8rem;
+      }
+    }
+  }
+}

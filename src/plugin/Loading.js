@@ -14,10 +14,10 @@ export default class Loading extends Component{
 
   render(){
     const size = {
-      height:store.getState().screenHeight+'px',width:store.getState().screenWidth+'px'
+      height:store.getState().screenHeight+'px',width:store.getState().screenWidth+'px',
     }
     return (
-      <div className={"Loading"} style={this.props.loading?size:{display:"none",...size}}>
+      <div className={ this.props.loading?"Loading fade-in":"Loading fade-out"} style={size}>
         <div className={"outer"}></div>
         <div className={"inner"}></div>
       </div>

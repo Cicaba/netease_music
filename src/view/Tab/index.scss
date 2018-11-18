@@ -5,29 +5,53 @@
     .sidebar{
       height: 100%;
       .bag{
-        padding-top: 3rem;
+        padding-top: 4rem;
         height: 25%;
         background-size: cover;
-        display: flex;
-        align-items: center;
         .img{
-          width: 4rem;
-          border-radius:50%;
+          width: 100%;
           padding-left: 1rem;
           img{
             width: 4rem;
             border-radius:50%;
           }
-          p{
-            padding-top: .4rem;
-            color: #FFF;
-            font-size: 1.2rem;
-            font-weight: 900;
+        }
+        p{
+          padding-top: .4rem;
+          padding-right: 1rem;
+          color: #FFF;
+          width: 100%;
+          font-size: 1.2rem;
+          font-weight: 900;
+          .level{
+            text-align: center;
+            border: .05rem solid #fff;
+            border-radius: 1rem;
+            display: inline-block;
+            font-size: .8rem;
+            height: .8rem;
+            width: 1.6rem;
+            line-height: .8rem;
+          }
+          .sign{
+            text-align: center;
+            height: 1.3rem;
+            width: 3rem;
+            border: .05rem solid #fff;
+            border-radius: 1.3rem;
+            float:right;
+            font-size: .8rem;
+            line-height: 1.3rem;
           }
         }
-
       }
     }
+  }
+  .am-drawer-overlay{
+    z-index: 9997;
+  }
+  .am-drawer-sidebar{
+    z-index: 9998;
   }
   .TabBar{
     background-color: #C20C0C;
