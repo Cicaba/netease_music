@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Flex,Drawer } from 'antd-mobile';
 import Song from '../Song/index';
 import Player from '../player/index';
-import axios from '../../plugin/axios'
-import './index.scss'
+import DetailPlayer from '../DetailPlayer/index';
+import axios from '../../plugin/axios';
+import './index.scss';
 
 class Tab extends Component {
   constructor(props) {
@@ -13,13 +14,15 @@ class Tab extends Component {
       TouchStart:[0,0],
       TouchEnd:[0,0],
       present:1,
+      DetailPlayer:null,
+      audio:null
     };
   }
 
   componentWillMount(){
-    console.log(this.props.state.userData)
     this.props.screenHeight({"type":"screenHeight","data":document.body.clientHeight});
     this.props.screenWidth({"type":"screenWidth","data":document.body.clientWidth});
+    this.props.beforePlay({type:"beforePlay",data:{...this.props.state.beforePlay,play:false}})
     if(!this.props.state.loginState){
       this.props.history.replace('/Login');
     }else{
@@ -73,15 +76,56 @@ class Tab extends Component {
                 <span className="sign">签到</span>
               </p>
             </div>
+            <Flex className='menu'>
+              <Flex.Item>
+              </Flex.Item>
+              <Flex.Item>
+              </Flex.Item>
+              <Flex.Item className={"exit icon-reply-1"} onClick={()=>this.exit()}>
+                退出
+              </Flex.Item>
+            </Flex>
           </div>
         )
       }else{
         return(<div></div>)
       }
   }
+  //退出
+  exit(){
+    localStorage.removeItem('persist:auto');
+    this.props.history.replace('/Login');
+  }
+  //返回
+  back(){
+    this.setState({
+      DetailPlayer:null
+    })
+  }
+  //播放
   play(item,arr){
     this.props.beforePlay({type:"beforePlay",data:{...item,allItem:arr}})
     this.refs.player.player()
+  }
+  //明细播放器
+  DetailPlayer(item,audio){
+    this.refs.DetailPlay.DetailPlay(true)
+    this.setState({
+      DetailPlayer:item,
+      audio
+    })
+  }
+  //明细播放
+  DetailPlay(){
+    this.refs.player.player()
+  }
+  //明细播放上曲
+  DetailPlayStart(){
+    this.refs.player.Ended(null,'before')
+  }
+  //明细播放下曲
+  DetailPlayEnd(){
+    this.refs.player.Ended(null,'next')
   }
   render() {
     return (
@@ -102,7 +146,8 @@ class Tab extends Component {
           </nav>
         </Drawer>
         <Song id={this.props.state.userData.profile.userId} play={(item,arr)=>{this.play(item,arr)}}></Song>
-        <Player ref={"player"}></Player>
+        <Player ref={"player"} DetailPlayer={(item,audio)=>this.DetailPlayer(item,audio)}></Player>
+        <DetailPlayer ref={'DetailPlay'} audio={this.state.audio} DetailPlayer={this.state.DetailPlayer} DetailPlayStart={()=>this.DetailPlayStart()} DetailPlayEnd={()=>this.DetailPlayEnd()} DetailPlay={()=>this.DetailPlay()} back={()=>{this.back()}}></DetailPlayer>
       </main>
     );
   }

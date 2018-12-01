@@ -1,0 +1,179 @@
+.DetailPlayer{
+  color: #ccc;
+  .rotate{
+    -webkit-animation: rotate linear 8s infinite paused;
+    -o-animation: rotate linear 8s infinite paused;
+    animation: rotate linear 8s infinite paused;
+  }
+  .paused{
+    -webkit-animation-play-state: running;
+    -moz-animation-play-state: running;
+    -o-animation-play-state: running;
+    animation-play-state: running;
+  }
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 4;
+  display: none;
+  .mask{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 5;
+    background-color: rgba(0,0,0,.94);
+    color: #fff;
+    .head{
+      overflow: hidden;
+      border-bottom:solid .1rem #333;
+      height: 3rem;
+      padding: 0 .6rem;
+      font-size: 1.5rem;
+      >span{
+        line-height: 3rem;
+      }
+      .text{
+        font-size: 1rem;
+        font-weight: 900;
+      }
+      .author{
+        font-size: 0.6rem;
+      }
+    }
+  }
+  .volume{
+    .icon-volume-up{
+      position: relative;
+      top:1rem;
+      left: .4rem;
+    }
+  }
+  .disc{
+    position: relative;
+    margin: 30% auto 0 auto;
+    width: 14rem;
+    height: 14rem;
+    overflow: hidden;
+    border: solid .1rem #666;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    >img{
+      width: 18rem;
+      position: relative;
+      top:-2rem;
+      left: -2rem;
+    }
+    .img{
+      position: absolute;
+      top: 2.4rem;
+      left: 2.4rem;
+      >img{
+        width: 9rem;
+        height: 9rem;
+        border: solid .1rem #666;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+      }
+    }
+  }
+  .control{
+    color: #ccc;
+    position: fixed;
+    width: 100%;
+    bottom: 1.2rem;
+    padding:0 1rem;
+    >div{
+      font-size: 1.8rem;
+      text-align: center;
+    }
+  }
+  .plancopy{
+    opacity: 0;
+    height: 1rem;
+    position: fixed;
+    width: 100%;
+    bottom: 4.5rem;
+    display: flex;
+    padding: 0 .5rem;
+    >div{
+      width: 85%;
+    }
+    >span{
+      display: inline-block;
+      text-align: center;
+      margin-top: .1rem;
+      width: 2.5rem;
+    }
+  }
+  .plan{
+    height: 1rem;
+    position: fixed;
+    width: 100%;
+    bottom: 4.5rem;
+    display: flex;
+    padding: 0 .5rem;
+    >div{
+      width: 85%;
+    }
+    >span{
+      display: inline-block;
+      text-align: center;
+      margin-top: .1rem;
+      width: 2.5rem;
+    }
+  }
+
+}
+@keyframes rotate {
+  to{
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  from{
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes  rotate{
+  to{
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  from{
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-ms-keyframes  rotate{
+  to{
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  from{
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}

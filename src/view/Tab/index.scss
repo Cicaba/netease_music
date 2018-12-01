@@ -1,9 +1,10 @@
 .App {
   .am-drawer-sidebar{
     width: 80%;
-    background-color: #fff;
+    background-color: #f5f5f9;
     .sidebar{
       height: 100%;
+      position: relative;
       .bag{
         padding-top: 4rem;
         height: 25%;
@@ -42,6 +43,23 @@
             float:right;
             font-size: .8rem;
             line-height: 1.3rem;
+          }
+        }
+      }
+      .menu{
+        height: 6%;
+        position: absolute;
+        bottom:0rem;
+        width: 100%;
+        background-color: #fff;
+        .exit{
+          height: 100%;
+          text-align: center;
+          &:after{
+            content: '';
+            height: 100%;
+            display: inline-block;
+            vertical-align: middle;
           }
         }
       }

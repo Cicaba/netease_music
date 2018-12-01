@@ -27,7 +27,11 @@ export default class Index extends Component {
       way: e[0]
     })
   }
-
+  enter(e){
+    if (e.which === 13){
+      this.Login()
+    }
+  }
   Login() {
     let url;
     if (this.state.way==1) {
@@ -59,7 +63,7 @@ export default class Index extends Component {
   }
   render() {
     return (
-      <div className="Login">
+      <div className="Login" onKeyDown={e=>this.enter(e)}>
         <Flex align={"center"} justify={"center"}>
           <Flex.Item>
             <List>

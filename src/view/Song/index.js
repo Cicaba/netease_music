@@ -1,98 +1,221 @@
-import React, { Component } from 'react';
-import { List } from 'antd-mobile';
+import React, {Component} from 'react';
+import {List} from 'antd-mobile';
 import Loading from '../../plugin/Loading'
-import PlayList from"../PlayList/index"
+import PlayList from "../PlayList/index"
 import './index.scss'
 import axios from '../../plugin/axios'
+import store from "../../store/state";
 
 class Song extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playlist:[],
-      playDetail:{},
-      loading:false
+      playlist: [],
+      playDetail: {},
+      loading: false
     };
   }
 
-   componentWillMount(){
-    axios.get("/user/playlist",{params:{uid:this.props.id}}).then(res=>{
-       this.setState({
-         playlist:res.data.playlist
-       })
+  componentWillMount() {
+    //用户歌单
+    axios.get("/user/playlist", {params: {uid: this.props.id}}).then(res => {
+      this.setState({
+        playlist: res.data.playlist
+      })
     })
   }
 
-  song(){
-    return(
-      this.state.playlist.map(v=>{
+  //渲染列表
+  song() {
+    return (
+      this.state.playlist.map(v => {
         return (
           <List.Item
             key={v.coverImgId}
             thumb={v.coverImgUrl}
             arrow="horizontal"
-            onClick={() => {this.PlayDetail(v.id)}}
+            onClick={() => {
+              this.PlayDetail(v)
+            }}
           >{v.name}</List.Item>
         )
       })
     )
   }
-  PlayDetail(id){
+
+  //列表详情
+  PlayDetail(item) {
     this.setState({
-      loading:true
+      loading: true
     })
-    axios.get("/playlist/detail",{params:{"id":id}}).then(res=>{
-      res.data.playlist.tracks.forEach((v,i)=>{
-        v.index = i+1
+    axios.get("/playlist/detail", {params: {"id": item.id}}).then(res => {
+      res.data.playlist.tracks.forEach((v, i) => {
+        v.pid = item.id;
+        v.pname = item.name;
+        v.index = i + 1;
+        v.loveid = this.state.playlist[0].id;
+        v.trackCount = res.data.playlist.trackCount;
       })
       this.setState({
-        playDetail:res.data.playlist,
-        loading:false
+        playDetail: res.data.playlist,
+        loading: false
       })
-    }).catch(()=>{
+    }).catch(() => {
       this.setState({
-        loading:false
+        loading: false
       })
     })
   }
-  renderHeader(){
-    return(
+
+  //列表头部
+  renderHeader() {
+    return (
       <div className="headerList">
         歌单
         <span className={"icon-cog"}></span>
       </div>
     )
   }
-  back(){
+
+  //返回
+  back() {
     this.setState({
-      playDetail:{}
+      playDetail: {}
     })
   }
-  play(item,arr){
-    this.props.play(item,arr)
+
+  //播放
+  play(item, arr) {
+    this.props.play(item, arr)
   }
+
+  //播放历史
+  history() {
+    this.setState({
+      loading: true
+    })
+    axios.post("/user/record", {
+      type: 1,
+      uid: this.props.id
+    })
+      .then(res => {
+        res.data.weekData.forEach((v, i) => {
+          v.song.index = i + 1
+        })
+        let playDetail = {
+          name: "播放历史",
+          // coverImgUrl: res.data.weekData[0].song.al.picUrl
+        };
+        playDetail.tracks = res.data.weekData.map(v => {
+          return v.song
+        })
+        this.setState({
+          playDetail,
+          loading: false
+        })
+      }).catch(() => {
+      this.setState({
+        loading: false
+      })
+    })
+  }
+
+  //每日推荐
+  daily() {
+    this.setState({
+      loading: true
+    })
+    axios.post("/recommend/songs")
+      .then(res => {
+        let playDetail = {
+          name: "每日推荐",
+          // coverImgUrl: res.data.recommend[0].album.picUrl
+        };
+        playDetail.tracks = res.data.recommend.map((v, i) => {
+          return {
+            index: i + 1,
+            ar: v.artists,
+            al: v.album,
+            ...v
+          }
+        })
+        this.setState({
+          playDetail,
+          loading: false
+        })
+      }).catch(() => {
+      this.setState({
+        loading: false
+      })
+    })
+  }
+
+  //推荐新歌
+  newSong() {
+    this.setState({
+      loading: true
+    })
+    axios.post("/personalized/newsong")
+      .then(res => {
+        let playDetail = {
+          name: "播放历史",
+          // coverImgUrl: res.data.result[0].song.album.picUrl
+        };
+        playDetail.tracks = res.data.result.map((v, i) => {
+          return {
+            index: i + 1,
+            ar: v.song.artists,
+            al: v.song.album,
+            ...v
+          }
+        })
+        this.setState({
+          playDetail,
+          loading: false
+        })
+      }).catch(() => {
+      this.setState({
+        loading: false
+      })
+    })
+  }
+
   render() {
     return (
       <div className={"Song"}>
         <List>
           <List.Item
-            thumb={(<span style={{fontSize:"1.2rem"}} className="icon-play-circled2"></span>)}
+            thumb={(<span style={{fontSize: "1.2rem"}} className=" icon-snowflake-o"></span>)}
             arrow="horizontal"
-            onClick={() => {}}
-          >播放历史</List.Item>
+            onClick={() => {
+              this.newSong()
+            }}
+          >推荐新歌</List.Item>
           <List.Item
-            thumb={(<span style={{fontSize:"1.2rem"}} className="icon-dropbox"></span>)}
+            thumb={(<span style={{fontSize: "1.2rem"}} className="icon-thumbs-up-alt"></span>)}
             arrow="horizontal"
-            onClick={() => {}}
-          >我的收藏</List.Item>
+            onClick={() => {
+              this.daily()
+            }}
+          >每日推荐</List.Item>
+          <List.Item
+            thumb={(<span style={{fontSize: "1.2rem"}} className="icon-play-circled2"></span>)}
+            arrow="horizontal"
+            onClick={() => this.history()}
+          >播放历史</List.Item>
         </List>
         <List renderHeader={this.renderHeader()}>
           {this.song()}
         </List>
-        <PlayList playDetail={this.state.playDetail} back={()=>{this.back()}} play={(item,arr)=>{this.play(item,arr)}}></PlayList>
+        <PlayList playDetail={this.state.playDetail} back={() => {
+          this.back()
+        }} play={(item, arr) => {
+          this.play(item, arr)
+        }}></PlayList>
         <Loading loading={this.state.loading}></Loading>
       </div>
     );
   }
 }
+
 export default Song;

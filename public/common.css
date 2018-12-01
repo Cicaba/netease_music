@@ -3,7 +3,10 @@ html, body, div, ul, li, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ol, form, input,
   margin: 0;
   padding: 0;
 }
-*{box-sizing: border-box;}
+*{
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
 html, body {
   font-size: 16px;
   width: 100%;
@@ -98,7 +101,24 @@ textarea {
   100%{
     transform: translateY(0rem);
   }
-}@keyframes fade-out {
+}
+@-webkit-keyframes  fade-in{
+  0%{
+    transform: translateY(150rem);
+  }
+  100%{
+    transform: translateY(0rem);
+  }
+}
+@-moz-keyframes  fade-in{
+  0%{
+    transform: translateY(150rem);
+  }
+  100%{
+    transform: translateY(0rem);
+  }
+}
+@keyframes fade-out {
    0%{
      transform: translateY(0rem);
    }
@@ -106,10 +126,33 @@ textarea {
      transform: translateY(150rem);
    }
  }
+@-webkit-keyframes  fade-out{
+  0%{
+    transform: translateY(0rem);
+  }
+  100%{
+    transform: translateY(150rem);
+  }
+}
+@-moz-keyframes  fade-out{
+  0%{
+    transform: translateY(0rem);
+  }
+  100%{
+    transform: translateY(150rem);
+  }
+}
 .fade-in{
+  -webkit-animation: fade-in .4s;
+  -o-animation: fade-in .4s;
   animation: fade-in .4s;
   top: 0rem !important;
 }.fade-out{
-  animation: fade-out .4s;
+   -webkit-animation: fade-out .4s;
+   -o-animation: fade-out .4s;
+   animation: fade-out .4s;
    top: 150rem !important;
 }
+ .am-action-sheet-body .am-action-sheet-message{
+   text-align: left;
+ }
