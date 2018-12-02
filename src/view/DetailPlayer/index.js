@@ -4,6 +4,7 @@ import { Slider,Flex } from 'antd-mobile';
 import imgurl from '../../imgs/唱片.png'
 import store from "../../store/state";
 import {Toast} from "antd-mobile/lib/index";
+import axios from "../../plugin/axios";
 
 export default class DetailPlayer extends Component {
   constructor(props) {
@@ -14,7 +15,40 @@ export default class DetailPlayer extends Component {
     }
   }
 
-  componentDidUpdate(){
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    // console.log(store.getState().beforePlay)
+    // console.log(store.getState().beforePlay.loveid,store.getState().beforePlay.pid)
+    return true
+  }
+//喜欢的音乐
+  love(){
+    if(store.getState().beforePlay.loveid===store.getState().beforePlay.pid){
+      axios.get("/playlist/tracks", {
+        params: {
+          op: "del",
+          pid: store.getState().beforePlay.loveid,
+          tracks: store.getState().beforePlay.id
+        }
+      }).then(res => {
+        store.dispatch({type:"beforePlay",data:{...store.getState().beforePlay,pid:null}})
+        Toast.info('成功移除喜欢歌单!', 2);
+      }).catch(() => {
+        Toast.info('歌曲移除失败!', 2);
+      })
+    }else{
+      axios.get("/playlist/tracks", {
+        params: {
+          op: "add",
+          pid: store.getState().beforePlay.loveid,
+          tracks: store.getState().beforePlay.id
+        }
+      }).then(res => {
+        store.dispatch({type:"beforePlay",data:{...store.getState().beforePlay,pid:store.getState().beforePlay.loveid}})
+        Toast.info("已成功添加到喜欢的歌单歌单!", 2)
+      }).catch(() => {
+        Toast.info("添加失败! 歌曲以存在歌单内!", 3);
+      })
+    }
   }
   //播放
   DetailPlay(carry){
@@ -66,7 +100,7 @@ export default class DetailPlayer extends Component {
             <span className={"author"}>&nbsp;
               {
                 store.getState().beforePlay.ar && store.getState().beforePlay.ar.map(v=>{
-                  return <span key={v.id}>{v.name} </span>
+                  return <span key={v.name}>{v.name} </span>
                 })
               }
             </span>
@@ -104,7 +138,7 @@ export default class DetailPlayer extends Component {
             </div>
           </div>
           <Flex className={'control'}>
-            <Flex.Item style={{fontSize:"1.4rem"}} className={store.getState().beforePlay.loveid===store.getState().beforePlay.pid?"icon-heart-filled":"icon-heart-1"}></Flex.Item>
+            <Flex.Item onClick={()=>{this.love()}} style={{fontSize:"1.4rem"}} className={store.getState().beforePlay.loveid===store.getState().beforePlay.pid?"icon-heart-filled":"icon-heart-1"}></Flex.Item>
             <Flex.Item onClick={this.props.DetailPlayStart} className={"icon-to-start"}></Flex.Item>
             <Flex.Item onClick={()=>this.DetailPlay()} className={!store.getState().beforePlay.play?"icon-play":"icon-pause"}></Flex.Item>
             <Flex.Item onClick={this.props.DetailPlayEnd} className={"icon-to-end"}></Flex.Item>

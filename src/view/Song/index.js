@@ -50,9 +50,9 @@ class Song extends Component {
     })
     axios.get("/playlist/detail", {params: {"id": item.id}}).then(res => {
       res.data.playlist.tracks.forEach((v, i) => {
+        v.index = i + 1;
         v.pid = item.id;
         v.pname = item.name;
-        v.index = i + 1;
         v.loveid = this.state.playlist[0].id;
         v.trackCount = res.data.playlist.trackCount;
       })
@@ -100,11 +100,14 @@ class Song extends Component {
     })
       .then(res => {
         res.data.weekData.forEach((v, i) => {
-          v.song.index = i + 1
+          v.song.index = i + 1;
+          v.song.pid = null
+          v.song.pname = '播放历史'
+          v.song.loveid = this.state.playlist[0].id
+          v.song.trackCount = res.data.weekData.length
         })
         let playDetail = {
-          name: "播放历史",
-          // coverImgUrl: res.data.weekData[0].song.al.picUrl
+          name: "播放历史"
         };
         playDetail.tracks = res.data.weekData.map(v => {
           return v.song
@@ -136,6 +139,10 @@ class Song extends Component {
             index: i + 1,
             ar: v.artists,
             al: v.album,
+            pname : '每日推荐',
+            pid:null,
+            loveid :this.state.playlist[0].id,
+            trackCount : res.data.recommend.length,
             ...v
           }
         })
@@ -158,7 +165,7 @@ class Song extends Component {
     axios.post("/personalized/newsong")
       .then(res => {
         let playDetail = {
-          name: "播放历史",
+          name: "推荐新歌",
           // coverImgUrl: res.data.result[0].song.album.picUrl
         };
         playDetail.tracks = res.data.result.map((v, i) => {
@@ -166,6 +173,10 @@ class Song extends Component {
             index: i + 1,
             ar: v.song.artists,
             al: v.song.album,
+            pname : '推荐新歌',
+            pid:null,
+            loveid :this.state.playlist[0].id,
+            trackCount : res.data.recommend.length,
             ...v
           }
         })
