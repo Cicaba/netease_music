@@ -1,0 +1,56 @@
+.found{
+  padding-top: 3rem;
+  height:calc(100% - 4rem);
+  .music{
+    .recommendation{
+      .imgrow{
+        >div{
+          width: 7rem;
+          .text{
+            font-size: .6rem;
+            padding: .4rem 0;
+          }
+        }
+        display: flex;
+        justify-content: space-around;
+        img{
+          width: 7rem;
+        }
+      }
+    }
+    .song{
+      .Item{
+        .am-list-content{
+          font-size: .8rem;
+        }
+      }
+      .imgrow{
+        >div{
+          width: 10rem;
+          .text{
+            font-size: .6rem;
+            padding: .4rem 0;
+          }
+        }
+        display: flex;
+        justify-content: space-around;
+        img{
+          width: 10rem;
+        }
+      }
+    }
+    .tab{
+      color: #c64b5c;
+      padding: .4rem 0;
+      font-size: 1.6rem;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      .size{
+        padding-top: .2rem;
+        color: #000;
+        padding-left: .2rem;
+        font-size: .6rem;
+      }
+    }
+  }
+}

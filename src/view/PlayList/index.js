@@ -23,7 +23,17 @@ export default class PlayList extends Component {
     }).then(res => {
       item.playItem = res.data.data[0];
       item.PlayMode = store.getState().beforePlay.PlayMode?store.getState().beforePlay.PlayMode:'icon-exchange'
-      this.props.play(item, arr)
+      //获取歌词
+      axios.get('/lyric', {
+        params: {
+          id: item.id
+        }
+      }).then(res => {
+        store.dispatch({type:"beforePlay",data:{...store.getState().beforePlay,lrc:res.data.lrc?res.data.lrc.lyric:""}})
+
+      })
+      store.dispatch({type: "beforePlay", data: {...item, allItem: arr,play:true}})
+      store.getState().audio.play()
     })
   }
 
@@ -122,7 +132,7 @@ export default class PlayList extends Component {
         <div className={"header"}>
           <span onClick={this.props.back} className={"icon-left"}></span>
           <span style={{fontSize: "1rem"}}>{this.props.playDetail.name}</span>
-          <span className={"icon-ellipsis-vert"}></span>
+          <span onClick={(e)=>{e.stopPropagation();Toast.info('请去客服端操作!', 2);}} className={"icon-ellipsis-vert"}></span>
         </div>
         <div style={store.getState().beforePlay.al?{height: store.getState().screenHeight - 7 * 16 + "px"}:{height: store.getState().screenHeight + "px"}}>
           <div className={"headImg"} style={this.props.playDetail.coverImgUrl ? {} : {display: "none"}}>

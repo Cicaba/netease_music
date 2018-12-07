@@ -7,6 +7,11 @@ export default class player extends Component{
   constructor(props){
     super(props)
   }
+
+  componentDidMount() {
+    store.dispatch({type:"audio",data:this.refs.audio})
+  }
+
   //播放暂停
   play(e) {
     e&&e.stopPropagation()
@@ -36,6 +41,7 @@ export default class player extends Component{
   }
   //歌曲切换
   Ended(e,type,auto){
+    let _this = this;
     e&&e.stopPropagation()
     let i;
     //自动播放
@@ -75,16 +81,32 @@ export default class player extends Component{
         id:data.id
         }}).then(res=>{
         data.playItem=res.data.data[0];
-        store.dispatch({type:"beforePlay",data:{...data,allItem:store.getState().beforePlay.allItem,play:true,PlayMode:store.getState().beforePlay.PlayMode?store.getState().beforePlay.PlayMode:'icon-exchange'}})
-        this.refs.play.className = "icon-pause"
-        this.refs.audio.play()
+        //获取歌词
+          axios.get('/lyric', {
+            params: {
+              id: data.id
+            }
+          }).then(res => {
+            let dataState = {
+              ...data,
+              lrc:res.data.lrc?res.data.lrc.lyric:null,
+              allItem:store.getState().beforePlay.allItem,
+              play:true,
+              PlayMode:store.getState().beforePlay.PlayMode?store.getState().beforePlay.PlayMode:'icon-exchange',
+            }
+            store.dispatch({type:"beforePlay",data:dataState})
+            _this.refs.play.className = "icon-pause"
+            _this.refs.audio.play()
+          })
+
       })
     }
   }
   //明细播放器
   DetailPlayer(e){
     if(e.target.className.indexOf('icon')>0) return
-    this.props.DetailPlayer(store.getState().beforePlay,this.refs.audio)
+    store.dispatch({type:'DetailPlayer',data:true})
+    // this.props.DetailPlayer(store.getState().beforePlay)
   }
   render(){
     return (
@@ -105,7 +127,7 @@ export default class player extends Component{
           </div>
           <div className={"handle"}>
             <span onClick={(e)=>this.Ended(e,"before")} className={"icon-to-start"}></span>
-            <span ref={"play"} onClick={(e)=>{this.play(e)}} className={"icon-play"}></span>
+            <span ref={"play"} onClick={(e)=>{this.play(e)}} className={!store.getState().beforePlay.play ? "icon-play" : "icon-pause"}></span>
             <span onClick={(e)=>this.Ended(e,"next")} className={"icon-to-end"}></span>
           </div>
         </div>

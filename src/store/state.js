@@ -3,5 +3,11 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import reducers from './reducers'
 //redux数据持久化
-let persistedReducer = persistReducer({ key: 'auto', storage }, reducers);
+let config = {
+  key: 'auto',
+  storage,
+  blacklist:['audio']
+}
+
+let persistedReducer = persistReducer(config, reducers);
 export default createStore(persistedReducer);

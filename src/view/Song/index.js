@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {List} from 'antd-mobile';
-import Loading from '../../plugin/Loading'
+import {List,Popover,Modal,Toast} from 'antd-mobile';
+import PropTypes from 'prop-types'
 import PlayList from "../PlayList/index"
 import './index.scss'
 import axios from '../../plugin/axios'
@@ -12,15 +12,20 @@ class Song extends Component {
     this.state = {
       playlist: [],
       playDetail: {},
-      loading: false
+      loading: false,
+      visible:false
     };
   }
-
+  static contextTypes = {
+    loading: PropTypes.func
+  }
   componentWillMount() {
     //用户歌单
-    axios.get("/user/playlist", {params: {uid: this.props.id}}).then(res => {
+    axios.get("/user/playlist", {params: {uid: store.getState().userData.profile.userId}}).then(res => {
       this.setState({
         playlist: res.data.playlist
+      },()=>{
+        store.dispatch({type:"loveid",data:this.state.playlist[0].id})
       })
     })
   }
@@ -45,9 +50,7 @@ class Song extends Component {
 
   //列表详情
   PlayDetail(item) {
-    this.setState({
-      loading: true
-    })
+    this.context.loading(true)
     axios.get("/playlist/detail", {params: {"id": item.id}}).then(res => {
       res.data.playlist.tracks.forEach((v, i) => {
         v.index = i + 1;
@@ -57,13 +60,11 @@ class Song extends Component {
         v.trackCount = res.data.playlist.trackCount;
       })
       this.setState({
-        playDetail: res.data.playlist,
-        loading: false
+        playDetail: res.data.playlist
       })
+      this.context.loading(false)
     }).catch(() => {
-      this.setState({
-        loading: false
-      })
+      this.context.loading(false)
     })
   }
 
@@ -72,11 +73,52 @@ class Song extends Component {
     return (
       <div className="headerList">
         歌单
-        <span className={"icon-cog"}></span>
+        <Popover mask
+                 overlayClassName="fortest"
+                 overlayStyle={{color: 'currentColor'}}
+                 visible={this.state.visible}
+                 overlay={[
+                   (<div onClick={()=>this.Add()} style={{padding:'.2rem .4rem'}}>+ 新增歌单</div>)
+                 ]}
+                 align={{
+                   overflow: {adjustY: 0, adjustX: 0},
+                   offset: [0, 10],
+                 }}
+        >
+          <span className={"icon-cog"}></span>
+        </Popover>
       </div>
     )
   }
-
+  Add(){
+    this.setState({
+      visible:false
+    },()=>{
+      Modal.prompt('歌单名称','',
+        [
+          {
+            text: '取消'
+          },
+          {
+            text: '确认',
+            onPress: value => new Promise((resolve, reject) => {
+              if(!value){
+                Toast.info('input your song', 1);
+              }else{
+                axios.get('/playlist/create',{
+                  params:{name:value}
+                }).then(()=>{
+                  Toast.info('创建成功! 2分钟后刷新后即可', 2);
+                  resolve()
+                }).catch(()=>{
+                  Toast.info('创建失败!', 1);
+                })
+              }
+            }),
+          },
+        ], 'default', null, ['input your song'])
+    })
+  }
   //返回
   back() {
     this.setState({
@@ -84,19 +126,13 @@ class Song extends Component {
     })
   }
 
-  //播放
-  play(item, arr) {
-    this.props.play(item, arr)
-  }
 
   //播放历史
   history() {
-    this.setState({
-      loading: true
-    })
+    this.context.loading(true)
     axios.post("/user/record", {
       type: 1,
-      uid: this.props.id
+      uid: store.getState().userData.profile.userId
     })
       .then(res => {
         res.data.weekData.forEach((v, i) => {
@@ -113,21 +149,17 @@ class Song extends Component {
           return v.song
         })
         this.setState({
-          playDetail,
-          loading: false
+          playDetail
         })
+        this.context.loading(false)
       }).catch(() => {
-      this.setState({
-        loading: false
-      })
+      this.context.loading(false)
     })
   }
 
   //每日推荐
   daily() {
-    this.setState({
-      loading: true
-    })
+    this.context.loading(true)
     axios.post("/recommend/songs")
       .then(res => {
         let playDetail = {
@@ -139,29 +171,25 @@ class Song extends Component {
             index: i + 1,
             ar: v.artists,
             al: v.album,
-            pname : '每日推荐',
-            pid:null,
-            loveid :this.state.playlist[0].id,
-            trackCount : res.data.recommend.length,
+            pname: '每日推荐',
+            pid: null,
+            loveid: this.state.playlist[0].id,
+            trackCount: res.data.recommend.length,
             ...v
           }
         })
         this.setState({
-          playDetail,
-          loading: false
+          playDetail
         })
+        this.context.loading(false)
       }).catch(() => {
-      this.setState({
-        loading: false
-      })
+      this.context.loading(false)
     })
   }
 
   //推荐新歌
   newSong() {
-    this.setState({
-      loading: true
-    })
+    this.context.loading(true)
     axios.post("/personalized/newsong")
       .then(res => {
         let playDetail = {
@@ -173,21 +201,19 @@ class Song extends Component {
             index: i + 1,
             ar: v.song.artists,
             al: v.song.album,
-            pname : '推荐新歌',
-            pid:null,
-            loveid :this.state.playlist[0].id,
-            trackCount : res.data.recommend.length,
+            pname: '推荐新歌',
+            pid: null,
+            loveid: this.state.playlist[0].id,
+            trackCount: res.data.recommend.length,
             ...v
           }
         })
         this.setState({
-          playDetail,
-          loading: false
+          playDetail
         })
+        this.context.loading(false)
       }).catch(() => {
-      this.setState({
-        loading: false
-      })
+      this.context.loading(false)
     })
   }
 
@@ -220,10 +246,7 @@ class Song extends Component {
         </List>
         <PlayList playDetail={this.state.playDetail} back={() => {
           this.back()
-        }} play={(item, arr) => {
-          this.play(item, arr)
         }}></PlayList>
-        <Loading loading={this.state.loading}></Loading>
       </div>
     );
   }

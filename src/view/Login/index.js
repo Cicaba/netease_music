@@ -52,7 +52,7 @@ export default class Index extends Component {
             bindings:res.data.bindings,
             profile:res.data.profile,
           }})
-        this.props.history.replace('/');
+        this.props.history.replace('/Song');
       })
     }).catch(()=>{
       this.setState({

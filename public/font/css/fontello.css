@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?23614957');
-  src: url('../font/fontello.eot?23614957#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff2?23614957') format('woff2'),
-       url('../font/fontello.woff?23614957') format('woff'),
-       url('../font/fontello.ttf?23614957') format('truetype'),
-       url('../font/fontello.svg?23614957#fontello') format('svg');
+  src: url('../font/fontello.eot?20809711');
+  src: url('../font/fontello.eot?20809711#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?20809711') format('woff2'),
+       url('../font/fontello.woff?20809711') format('woff'),
+       url('../font/fontello.ttf?20809711') format('truetype'),
+       url('../font/fontello.svg?20809711#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?23614957#fontello') format('svg');
+    src: url('../font/fontello.svg?20809711#fontello') format('svg');
   }
 }
 */
@@ -64,6 +64,7 @@
 .icon-to-end:before { content: '\e806'; } /* '' */
 .icon-to-start:before { content: '\e807'; } /* '' */
 .icon-mail:before { content: '\e808'; } /* '' */
+.icon-calendar:before { content: '\e809'; } /* '' */
 .icon-left:before { content: '\e80a'; } /* '' */
 .icon-cog:before { content: '\e80b'; } /* '' */
 .icon-download-1:before { content: '\e80c'; } /* '' */
@@ -75,6 +76,7 @@
 .icon-reply-1:before { content: '\e812'; } /* '' */
 .icon-forward-1:before { content: '\e813'; } /* '' */
 .icon-folder:before { content: '\e814'; } /* '' */
+.icon-chart:before { content: '\e815'; } /* '' */
 .icon-search-1:before { content: '\e816'; } /* '' */
 .icon-volume-up:before { content: '\e817'; } /* '' */
 .icon-shuffle:before { content: '\e818'; } /* '' */
@@ -90,4 +92,5 @@
 .icon-thumbs-up-alt:before { content: '\f164'; } /* '' */
 .icon-dropbox:before { content: '\f16b'; } /* '' */
 .icon-safari:before { content: '\f267'; } /* '' */
+.icon-credit-card-alt:before { content: '\f283'; } /* '' */
 .icon-snowflake-o:before { content: '\f2dc'; } /* '' */

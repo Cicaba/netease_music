@@ -3,11 +3,14 @@ export default {
   loginState:false,
   screenWidth:"",
   screenHeight:"",
+  audio:null,
+  DetailPlayer:false,
+  beforePlay:{},
   userData:{
-    beforePlay:{},
     account:{},
     bindings:{},
     profile:{},
-    detail:{}
+    detail:{},
+    loveid:null
   }
 }

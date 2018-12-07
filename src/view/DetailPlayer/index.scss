@@ -81,6 +81,25 @@
       }
     }
   }
+  .lrc{
+    padding: 2rem 0;
+    >p{
+      text-align: center;
+      padding: .2rem 0;
+    }
+    .top{
+      color: #ccc;
+    }
+    .center{
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    .bottom{
+      color: #ccc;
+      font-size: 1rem;
+    }
+  }
   .control{
     color: #ccc;
     position: fixed;

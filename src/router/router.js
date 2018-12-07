@@ -10,6 +10,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 import { Provider } from 'react-redux';
 import store from '../store/state';
+import Player from '../view/player/state.js';
+
 /**
  * 定义应用路
  */
@@ -114,6 +116,7 @@ export default (
     <Provider store={store}>
       <Router>
         <div>
+          <Player></Player>
           {routeChildren}
         </div>
       </Router>

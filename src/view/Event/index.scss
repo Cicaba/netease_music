@@ -1,0 +1,36 @@
+.Event{
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+  margin-top: 3rem;
+  height:calc(100% - 4rem);
+  overflow-y: scroll;
+  .item{
+    margin-top: 1rem;
+    .user{
+      margin: 1rem 0;
+      >img{
+        width: 2rem;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+      }
+      >span{
+        padding-left: .4rem;
+        font-weight: 900;
+      }
+      >div{
+        padding-left: 2.4rem;
+      }
+    }
+    .msg{
+      img{
+        width: 100%;
+      }
+      video{
+        width: 100%;
+      }
+    }
+  }
+
+}
