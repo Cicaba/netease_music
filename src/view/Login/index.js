@@ -61,6 +61,9 @@ export default class Index extends Component {
       Toast.info('登陆失败 !!!', 2);
     })
   }
+  sign(){
+    window.location.href='https://zc.reg.163.com/m/regInitialized'
+  }
   render() {
     return (
       <div className="Login" onKeyDown={e=>this.enter(e)}>
@@ -77,6 +80,7 @@ export default class Index extends Component {
             <Button type="primary" onClick={()=>{this.Login()}}>登陆</Button>
           </Flex.Item>
         </Flex>
+        <div onClick={()=>{this.sign()}} className={'btn'}>快速注册</div>
         <Loading loading={this.state.loading}/>
       </div>
     )

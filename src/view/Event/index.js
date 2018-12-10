@@ -5,9 +5,8 @@
  */
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Flex, Tabs, List, Picker, PullToRefresh} from 'antd-mobile';
+import { PullToRefresh} from 'antd-mobile';
 import axios from '../../plugin/axios'
-import PlayList from "../PlayList/index"
 import store from "../../store/state";
 import './index.scss'
 
@@ -42,6 +41,9 @@ export default class Found extends Component {
   }
 
   play(e,json,i) {
+    document.querySelectorAll(".video").forEach(v=>{
+      v.pause()
+    })
     if (json.song) {
       axios.get("/song/url", {
         params: {
@@ -56,9 +58,9 @@ export default class Found extends Component {
           pname: '动态',
           pid: null,
           loveid: store.getState().userData.loveid,
-          trackCount: store.getState().beforePlay.allItem.length + 1,
+          trackCount: store.getState().beforePlay.allItem?store.getState().beforePlay.allItem.length + 1:1,
           play: true,
-          allItem: store.getState().beforePlay.allItem
+          allItem: store.getState().beforePlay.allItem?store.getState().beforePlay.allItem:[]
         }
         data.playItem = res.data.data[0];
         //获取歌词
@@ -74,8 +76,10 @@ export default class Found extends Component {
       })
     }else{
       e.persist()
-      axios.post('/video/url',{id:json.video.videoId}).then(res=>{
-        e.target.parentNode.innerHTML='<video src="'+res.data.urls[0].url+'" controls="controls">'
+      axios.post("/video/url?timestamp=" + +new Date(),{id:json.video.videoId}).then(res=>{
+        store.dispatch({type: "beforePlay", data:{...store.getState().beforePlay,play:false}})
+        store.getState().audio.pause()
+        e.target.parentNode.innerHTML='<video width="100%" height="202px" class="video" src="'+res.data.urls[0].url+'" controls="controls">'
       })
     }
   }
@@ -85,11 +89,6 @@ export default class Found extends Component {
       <div className="Event">
         <PullToRefresh
           damping={60}
-          ref={el => this.ptr = el}
-          style={{
-            height: this.state.height,
-            overflow: 'auto',
-          }}
           indicator={this.state.down ? {} : {deactivate: '上拉可以刷新'}}
           direction={"down"}
           refreshing={this.state.refreshing}
@@ -107,7 +106,8 @@ export default class Found extends Component {
               </div>
               <div className={"msg"}>
                 <img onClick={(e) => this.play(e,v.json,i)}
-                     src={v.json.video ? v.json.video.coverUrl : v.json.song.album.blurPicUrl} alt=""/>
+                     src={v.json.video ? v.json.video.coverUrl : v.json.song?v.json.song.album.blurPicUrl:""} alt=""/>
+                <div className={v.json.video?"icon-play":""}></div>
               </div>
             </div>)
           })}

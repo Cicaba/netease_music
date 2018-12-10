@@ -8,9 +8,7 @@ export default class Loading extends Component{
     super(props)
   }
 
-  componentDidMount() {
-    console.log(store.getState())
-  }
+
 
   render(){
     const size = {

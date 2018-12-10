@@ -4,6 +4,7 @@
 import Tab from '../view/Tab/state';
 import Login from '../view/Login/state';
 import Song from '../view/Song/index';
+import Search from '../view/Search/index';
 import Found from "../view/Found/state";
 import Event from "../view/Event/state";
 // 以下文件格式为描述路由的协议格式
@@ -26,6 +27,10 @@ const routerConfig = [
       {
         path:"/Event",
         component: Event,
+      },
+      {
+        path:"/Search",
+        component: Search,
       }
     ]
   },

@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import {Route} from 'react-router-dom'
-import {Flex, Drawer, List, ActionSheet,Modal} from 'antd-mobile';
+import {Flex, Drawer, List, ActionSheet, Modal} from 'antd-mobile';
 import Loading from '../../plugin/Loading'
-// import Player from '../player/index';
 import DetailPlayer from '../DetailPlayer/index';
 import axios from '../../plugin/axios';
 import './index.scss';
@@ -20,39 +19,49 @@ class Tab extends Component {
       present: 1,
       DetailPlayer: null,
       SRTS: null,
-      message:false,
-      loading:false
+      message: false,
+      loading: false
     };
   }
-  getChildContext(){
-    return {loading: (f)=>{this.setState({loading:f})}};
+
+  getChildContext() {
+    return {
+      loading: (f) => {
+        this.setState({loading: f})
+      }
+    };
   }
-  static childContextTypes={
+
+  static childContextTypes = {
     loading: PropTypes.func
   }
 
 
   componentWillMount() {
-    if(this.props.location.pathname==='/Found'){
+    if (this.props.location.pathname === '/Found') {
       this.setState({
         present: 2
       })
-    }else if(this.props.location.pathname==='/Song'){
+    } else if (this.props.location.pathname === '/Song') {
       this.setState({
         present: 1
       })
-    }else if(this.props.location.pathname==='/Event'){
+    } else if (this.props.location.pathname === '/Event') {
       this.setState({
         present: 3
       })
-    }else{
+    } else if (this.props.location.pathname === '/Search') {
+      this.setState({
+        present: 4
+      })
+    } else {
       this.props.history.replace('/Song');
     }
     this.props.screenHeight({"type": "screenHeight", "data": document.body.clientHeight});
     this.props.screenWidth({"type": "screenWidth", "data": document.body.clientWidth});
     let data = {
       ...this.props.state.beforePlay,
-      play:this.props.state.audio?!this.props.state.audio.paused:false
+      play: this.props.state.audio ? !this.props.state.audio.paused : false
     }
     this.props.beforePlay({type: "beforePlay", data})
     if (!this.props.state.loginState) {
@@ -67,6 +76,19 @@ class Tab extends Component {
         this.props.history.replace('/Login');
       })
     }
+    let time = JSON.parse(localStorage.getItem('tiem'))
+    if(time){
+      if(+new Date()-time.now>1000*360*24){
+        axios.get('/daily_signin').then(()=>{
+          localStorage.setItem('tiem',JSON.stringify({now: +new Date()}))
+        }).catch(()=>{
+          localStorage.setItem('tiem',JSON.stringify({now: +new Date()}))
+        })
+      }
+    }else{
+      localStorage.setItem('tiem',JSON.stringify({now: +new Date()}))
+    }
+
   }
 
   Drawer() {
@@ -111,7 +133,7 @@ class Tab extends Component {
               {this.props.state.userData.profile.nickname}
               &emsp;
               <span className="level">{this.props.state.userData.detail.level}</span>
-              <span className="sign">签到</span>
+              <span className="sign">自动签到</span>
             </p>
           </div>
           <List className={"menuList"}>
@@ -189,7 +211,7 @@ class Tab extends Component {
               arrow="horizontal"
               onClick={() => {
                 this.setState({
-                  message:true
+                  message: true
                 })
               }}>
               基本信息
@@ -200,16 +222,20 @@ class Tab extends Component {
             transparent
             maskClosable={false}
             title=""
-            footer={[{ text: 'Ok', onPress: () => { this.setState({
-                message:false
-              })} }]}
+            footer={[{
+              text: 'Ok', onPress: () => {
+                this.setState({
+                  message: false
+                })
+              }
+            }]}
           >
-            <div style={{ height: 120, overflow: 'scroll' }}>
-              作者: Cicaba<br />
-              联系方式: 1533436877@qq.com<br />
-              该音乐播放器为个人学习所用<br />
-              禁止商业用途<br />
-              音乐资源来自网易云音乐<br />
+            <div style={{height: 120, overflow: 'scroll'}}>
+              作者: Cicaba<br/>
+              联系方式: 1533436877@qq.com<br/>
+              该音乐播放器为个人学习所用<br/>
+              禁止商业用途<br/>
+              音乐资源来自网易云音乐<br/>
             </div>
           </Modal>
           <Flex className='menu'>
@@ -263,17 +289,17 @@ class Tab extends Component {
               <Flex.Item style={{flex: 4}}>
                 <Flex style={{padding: "0 2rem 0 2rem"}}>
                   <Flex.Item onClick={() => {
-                    this.setState({present: 1},()=>{
+                    this.setState({present: 1}, () => {
                       this.props.history.push('/Song')
                     })
                   }} className="icon-music" style={this.state.present == 1 ? {color: "#fff"} : {}}></Flex.Item>
                   <Flex.Item onClick={() => {
-                    this.setState({present: 2},()=>{
+                    this.setState({present: 2}, () => {
                       this.props.history.push('/Found')
                     })
                   }} className="icon-music-1" style={this.state.present == 2 ? {color: "#fff"} : {}}></Flex.Item>
                   <Flex.Item onClick={() => {
-                    this.setState({present: 3},()=>{
+                    this.setState({present: 3}, () => {
                       this.props.history.push('/Event')
                     })
                   }} className="icon-users" style={this.state.present == 3 ? {color: "#fff"} : {}}></Flex.Item>
@@ -281,11 +307,12 @@ class Tab extends Component {
               </Flex.Item>
               <Flex.Item onClick={() => {
                 this.setState({present: 4})
+                this.props.history.push('/Search')
               }} className=" icon-search-1" style={this.state.present == 4 ? {color: "#fff"} : {}}></Flex.Item>
             </Flex>
           </nav>
         </Drawer>
-        <Route path={this.props.match.url} render={()=>this.props.children?this.props.children:'null'}></Route>
+        <Route path={this.props.match.url} render={() => this.props.children ? this.props.children : 'null'}></Route>
         {/*{this.props.children}*/}
         {/*<Player ref={"player"} DetailPlayer={(item) => this.DetailPlayer(item)}></Player>*/}
         <DetailPlayer ref={'DetailPlay'} DetailPlayer={this.state.DetailPlayer}
